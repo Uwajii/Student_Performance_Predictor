@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Performance Predictor</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        /* Header */
+        .header {
+            background: #1f4e79;
+            color: white;
+            text-align: center;
+            padding: 38px 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 34px;
+            font-weight: 700;
+        }
+
+        .header p {
+            margin: 10px 0 0;
+            font-size: 16px;
+        }
+
+        /* Main container */
+        .container {
+            width: 92%;
+            max-width: 1050px;
+            margin: 45px auto;
+        }
+
+        /* Cards layout */
+        .cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 32px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .card-title {
+            margin: 0 0 8px;
+            color: #1f4e79;
+            font-size: 23px;
+        }
+
+        .card-description {
+            margin: 0 0 28px;
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 21px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            font-size: 16px;
+            background: white;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #1f4e79;
+            box-shadow: 0 0 0 3px rgba(31, 78, 121, 0.10);
+        }
+
+        .hint {
+            display: block;
+            margin-top: 6px;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        /* Button */
+        button {
+            width: 100%;
+            margin-top: 5px;
+            padding: 14px;
+            border: none;
+            border-radius: 7px;
+            background: #1f4e79;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #163a5c;
+        }
+
+        /* Result card */
+        .result-card {
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .result-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .result-card h2 {
+            margin: 0 0 12px;
+            color: #1f4e79;
+            font-size: 24px;
+        }
+
+        .prediction {
+            font-size: 30px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .result-text {
+            margin: 0 auto;
+            max-width: 400px;
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* On Track */
+        .on-track {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .on-track-text {
+            color: #2e7d32;
+        }
+
+        /* At Risk */
+        .at-risk {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .at-risk-text {
+            color: #e65100;
+        }
+
+        /* Waiting state */
+        .waiting {
+            background: #eef5fb;
+            color: #1f4e79;
+        }
+
+        .waiting-text {
+            color: #64748b;
+        }
+
+        /* Error */
+        .error-card {
+            margin-top: 25px;
+            padding: 18px;
+            border-radius: 10px;
+            background: #fff3cd;
+            border: 1px solid #ffe69c;
+            color: #856404;
+        }
+
+        .error-card h3 {
+            margin: 0 0 7px;
+            font-size: 17px;
+        }
+
+        .error-card p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin: 35px 0 20px;
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .footer strong {
+            color: #475569;
+            font-weight: 600;
+        }
+
+        /* Mobile */
+        @media (max-width: 750px) {
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 27px;
+            }
+
+            .container {
+                margin: 30px auto;
+            }
+
+            .card {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <!-- Header -->
+    <div class="header">
+
+        <h1>Student Performance Predictor</h1>
+
+        <p>
+            Machine Learning-Based Formative Assessment Analysis
+        </p>
+
+    </div>
+
+
+    <!-- Main Content -->
+    <div class="container">
+
+        <div class="cards">
+
+
+            <!-- Input Card -->
+            <div class="card">
+
+                <h2 class="card-title">
+                    Student Information
+                </h2>
+
+                <p class="card-description">
+                    Enter the student's formative assessment data
+                    to generate a performance prediction.
+                </p>
+
+
+                <form method="POST">
+
+
+                    <!-- Quiz -->
+                    <div class="form-group">
+
+                        <label for="quiz">
+                            Quiz Average
+                        </label>
+
+                        <input
+                            type="number"
+                            id="quiz"
+                            name="quiz"
+                            min="0"
+                            max="100"
+                            step="0.1"
+                            required>
+
+                        <span class="hint">
+                            Value between 0 and 100
+                        </span>
+
+                    </div>
+
+
+                    <!-- Assignment -->
+                    <div class="form-group">
+
+                        <label for="assignment">
+                            Assignment Average
+                        </label>
+
+                        <input
+                            type="number"
+                            id="assignment"
+                            name="assignment"
+                            min="0"
+                            max="100"
+                            step="0.1"
+                            required>
+
+                        <span class="hint">
+                            Value between 0 and 100
+                        </span>
+
+                    </div>
+
+
+                    <!-- Attendance -->
+                    <div class="form-group">
+
+                        <label for="attendance">
+                            Attendance
+                        </label>
+
+                        <input
+                            type="number"
+                            id="attendance"
+                            name="attendance"
+                            min="0"
+                            max="100"
+                            step="0.1"
+                            required>
+
+                        <span class="hint">
+                            Attendance percentage
+                        </span>
+
+                    </div>
+
+
+                    <!-- Engagement -->
+                    <div class="form-group">
+
+                        <label for="engagement">
+                            Engagement
+                        </label>
+
+                        <input
+                            type="number"
+                            id="engagement"
+                            name="engagement"
+                            min="1"
+                            max="5"
+                            step="1"
+                            required>
+
+                        <span class="hint">
+                            Rating from 1 to 5
+                        </span>
+
+                    </div>
+
+
+                    <!-- Button -->
+                    <button type="submit">
+                        Predict Performance
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <!-- Result Card -->
+            <div class="card result-card">
+
+                {% if prediction %}
+
+                    {% if prediction == "On Track" %}
+
+                        <div class="result-icon on-track">
+                            ✓
+                        </div>
+
+                        <h2>
+                            Prediction Result
+                        </h2>
+
+                        <div class="prediction on-track-text">
+                            On Track
+                        </div>
+
+                        <p class="result-text">
+                            The model predicts that the student is
+                            currently on track based on the entered
+                            formative assessment data.
+                        </p>
+
+
+                    {% elif prediction == "At Risk" %}
+
+                        <div class="result-icon at-risk">
+                            !
+                        </div>
+
+                        <h2>
+                            Prediction Result
+                        </h2>
+
+                        <div class="prediction at-risk-text">
+                            At Risk
+                        </div>
+
+                        <p class="result-text">
+                            The model predicts that the student may
+                            require additional academic support.
+                        </p>
+
+                    {% endif %}
+
+
+                {% else %}
+
+                    <div class="result-icon waiting">
+                        ?
+                    </div>
+
+                    <h2>
+                        Prediction Result
+                    </h2>
+
+                    <div class="prediction waiting-text">
+                        —
+                    </div>
+
+                    <p class="result-text">
+                        Enter the student's formative assessment
+                        data and click "Predict Performance" to
+                        generate a prediction.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- Error Message -->
+        {% if error %}
+
+        <div class="error-card">
+
+            <h3>
+                Input Error
+            </h3>
+
+            <p>
+                {{ error }}
+            </p>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- Footer -->
+        <div class="footer">
+
+            Student Performance Prediction System
+            <br>
+
+            <strong>
+                Designed &amp; Developed by Wajahat Ullah
+            </strong>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
